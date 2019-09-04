@@ -1,99 +1,70 @@
-package edu.ap.spring.controller;
+package edu.ap.spring.redis.controller;
 
-import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-
-import edu.ap.spring.redis.RedisService;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import aj.org.objectweb.asm.Handle;
+import edu.ap.spring.redis.service.RedisService;
+
 @Controller
-public class QuoteController {
+public class EightballController {
 
-   @Autowired
-   private RedisService service;
-	 
-   @GetMapping("/listauthors")
-   public String listAuthors(Model model) {
-
-	ArrayList<String> authors = new ArrayList<String>();
-	for(String a : this.service.keys("author:*")) {
-		authors.add(this.service.getKey(a));
-	}
-	model.addAttribute("authors", authors);
-
-	return "listAuthors";
-   }
-
-   @GetMapping("/listquotes/{authorid}")
-   public String listQuotesById(@PathVariable("authorid") int authorid, 
-   							Model model) {
-
-	ArrayList<String> quotes = new ArrayList<String>();
-	for(String a : this.service.keys("quote:" + authorid + ":*")) {
-		quotes.add(this.service.getKey(a));
-	}
-
-	String author = this.service.getKey(this.service.keys("author:*:" + authorid).iterator().next());
-	model.addAttribute("quotes", quotes);
-	model.addAttribute("author", author);
-
-	return "listQuotes";
-   }
-
-   @GetMapping("/author")
-   public String getAuthorForm() {
-	return "addAuthor";
-   }
-
-   @PostMapping("/author")
-   public String addAuthor(@RequestParam("firstName") String firstName, 
-						   @RequestParam("lastName") String lastName, 
-						   Model model) {
-	   
-	if(this.service.exists("authorcount")) {
-		this.service.incr("authorcount");
-	}
-	else {
-		this.service.setKey("authorcount", "1");
-	}   
+	private RedisService service;
 	
-	this.service.setKey("author:" + firstName + lastName + ":" + this.service.getKey("authorcount"),  firstName + " " + lastName);
-
-	return "redirect:listauthors";
-   }
-
-   @GetMapping("/quote")
-   public String getQuoteForm(Model model) {
-
-	ArrayList<String> authors = new ArrayList<String>();
-	for(String a : this.service.keys("author:*")) {
-		authors.add(this.service.getKey(a));
+	@Autowired
+	public void setService(RedisService service) {
+		this.service = service;
 	}
-	model.addAttribute("authors", authors);
-
-	return "addQuote";
-   }
-
-   @PostMapping("/quote")
-   public String addQuote(@RequestParam("quote") String quote, 
-   						  @RequestParam("author") String author) {
-
-	String[] authorName = author.split(" ");
-	String authorKey = this.service.keys("author:" + authorName[0] + authorName[1] + ":*").iterator().next();
-	if(this.service.exists("quotecount")) {
-		this.service.incr("quotecount");
+	
+	@RequestMapping("/")
+	public String index() {
+		return "Eightball";
 	}
-	else {
-		this.service.setKey("quotecount", "1");
-	}     
-
-	this.service.setKey("quote:" + authorKey.split(":")[2] + ":" + this.service.getKey("quotecount"), quote);
-
-	return "redirect:listquotes/" + authorKey.split(":")[2];
-   }
+	
+	@PostMapping("/questionAction")
+	public String setQuestion(@RequestParam("question") String question, Model model) {
+		
+		String questionString = question;
+		String answer;
+		if (service.getKey(questionString) != null) {
+			answer = service.getKey(questionString);
+		}
+		else {
+			if (service.scard("answer") >= 1) {
+				answer = service.spop("answer");
+			}
+			else {
+				byte[] answer1 = "It is certain".getBytes();
+				byte[] answer2 = "It is decidedly so".getBytes();
+				byte[] answer3 = "Without a doubt".getBytes();
+				byte[] answer4 = "Yes definitely".getBytes();
+				byte[] answer5 = "You may rely on it".getBytes();
+				byte[] answer6 = "As I see it, yes".getBytes();
+				byte[] answer7 = "Most likely".getBytes();
+				byte[] answer8 = "Outlook good".getBytes();
+				byte[] answer9 = "Yes".getBytes();
+				byte[] answer10 = "Signs point to yes".getBytes();
+				byte[] answer11 = "Reply hazy try again".getBytes();
+				byte[] answer12 = "Ask again later".getBytes();
+				byte[] answer13 = "Better not tell you now".getBytes();
+				byte[] answer14 = "Cannot predict now".getBytes();
+				byte[] answer15 = "Concentrate and ask again".getBytes();
+				byte[] answer16 = "My reply is no".getBytes();
+				byte[] answer17 = "Don't count on it".getBytes();
+				byte[] answer18 = "My sources say no".getBytes();
+				byte[] answer19 = "Outlook not so good".getBytes();
+				byte[] answer20 = "Very doubtful".getBytes();
+				service.sadd("answers",answer1,answer2,answer3,answer4,answer5,answer6,answer7,answer8,answer9,answer10,answer11,answer12,answer13,answer14,answer15,answer16,answer17,answer18,answer19,answer20);
+				answer = service.spop("answers");
+			}
+			service.setKey(question, answer);
+		}
+		
+		model.addAttribute("answer",answer);
+		return "Validation";
+	}
 }

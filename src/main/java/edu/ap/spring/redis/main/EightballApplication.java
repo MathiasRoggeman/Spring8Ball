@@ -1,13 +1,14 @@
-package edu.ap.spring;
+package edu.ap.spring.redis.main;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class QuoteApplication {
+public class EightballApplication {
+
 
 	public static void main(String[] args) {
-		SpringApplication.run(QuoteApplication.class, args);
+		SpringApplication.run(EightballApplication.class, args);
 	}
 
 }
