@@ -1,4 +1,4 @@
-package edu.ap.spring.redis.service;
+package eightball.spring.redis.service;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
@@ -114,3 +114,33 @@ public class RedisService {
 	}
 }
 
+/*
+ // ValueOperations, BoundValueOperations
+template.opsForValue().set(key, value); 
+template.boundValueOps(key).set(value); 
+
+// HashOperations, BoundHashOperations
+template.opsForHash().put(key, "hashKey", value); 
+template.boundHashOps(key).put("hashKey", value); 
+
+// ListOperations, BoundListOperations
+template.opsForList().leftPush(key, value); 
+template.opsForList().rightPush(key, value); 
+template.opsForList().rightPop(key, 1, TimeUnit.SECONDS); 
+template.opsForList().leftPop(key, 1, TimeUnit.SECONDS); 
+template.boundListOps(key).leftPush(value); 
+template.boundListOps(key).rightPush(value); 
+template.boundListOps(key).rightPop(1, TimeUnit.SECONDS); 
+template.boundListOps(key).leftPop(1, TimeUnit.SECONDS); 
+
+// ZSetOperations, BoundZSetOperations
+template.opsForZSet().add(key, "player1", 12.0d); 
+template.opsForZSet().add(key, "player2", 11.0d); 
+template.boundZSetOps(key).add("player1", 12.0d); 
+template.boundZSetOps(key).add("player2", 11.0d);
+
+// Misc
+template.getConnectionFactory().getConnection().bitOp(BitOperation.AND, arg1, arg2);
+template.expire(key, 1, TimeUnit.SECONDS);
+template.opsForHyperLogLog().add(arg0, arg1);
+*/

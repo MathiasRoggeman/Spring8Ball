@@ -1,4 +1,4 @@
-package edu.ap.spring.redis.controller;
+package eightball.spring.redis.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import aj.org.objectweb.asm.Handle;
-import edu.ap.spring.redis.service.RedisService;
+import eightball.spring.redis.service.RedisService;
 
 @Controller
 public class EightballController {

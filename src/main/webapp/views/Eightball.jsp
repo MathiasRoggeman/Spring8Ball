@@ -20,7 +20,6 @@
 	    	</div>
 		<input type=SUBMIT value='Save'>
 		<br/><br/>
-<a href='/'>List all</a>
 </form>
 
 <br/><br/>
